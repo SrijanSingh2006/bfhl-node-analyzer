@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BFHL · Node Analyzer</title>
+  <meta name="description" content="SRM Full Stack Engineering Challenge — Node hierarchy analyzer by Srijan Singh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="masthead">
+    <div class="masthead-left">
+      <span class="issue-label">SRM · ROUND 01</span>
+      <span class="issue-date" id="issue-date"></span>
+    </div>
+    <div class="masthead-title">
+      <h1 class="paper-title">BFHL</h1>
+      <p class="paper-sub">Node Hierarchy Analyzer</p>
+    </div>
+    <div class="masthead-right">
+      <span class="roll-label">Candidate</span>
+      <span class="roll-val">srijansingh_10112006</span>
+      <span class="roll-val dim">RA2311003010626</span>
+    </div>
+  </div>
+
+  <div class="rule-thick"></div>
+  <div class="rule-thin"></div>
+
+  <div class="page-grid">
+
+    <section class="col-input">
+      <div class="section-eyebrow">
+        <span class="eyebrow-num">§ 01</span>
+        <span class="eyebrow-label">Edge Input</span>
+      </div>
+
+      <div class="field-wrap">
+        <div class="field-label">
+          <span>ENTER YOUR EDGES</span>
+          <span class="entry-counter" id="entry-counter">—</span>
+        </div>
+        <div class="editor-shell" id="editor-shell">
+          <div class="editor-gutter" id="gutter">1</div>
+          <textarea id="edge-input" class="editor-area" spellcheck="false"
+            placeholder="A->B&#10;A->C&#10;B->D&#10;..."></textarea>
+        </div>
+        <p class="field-hint">Comma or newline separated &nbsp;·&nbsp; Format: <code>X-&gt;Y</code> (single uppercase letters)</p>
+      </div>
+
+      <div class="controls-row">
+        <button class="ctrl-link" id="example-btn" type="button">↳ load example</button>
+        <button class="ctrl-link" id="clear-btn" type="button">↳ clear</button>
+        <div class="spacer"></div>
+        <button class="submit-btn" id="submit-btn" type="button">
+          <span id="btn-text">Analyze</span>
+          <span class="btn-loader hidden" id="btn-loader">···</span>
+          <span class="btn-arrow" id="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="validity-table">
+        <div class="vt-header">Format reference</div>
+        <div class="vt-rows">
+          <div class="vt-row ok"><code>A->B</code><span class="vt-verdict ok-v">valid</span></div>
+          <div class="vt-row no"><code>AB->C</code><span class="vt-verdict no-v">multi-char</span></div>
+          <div class="vt-row no"><code>1->2</code><span class="vt-verdict no-v">not letters</span></div>
+          <div class="vt-row no"><code>A->A</code><span class="vt-verdict no-v">self-loop</span></div>
+          <div class="vt-row no"><code>A-></code><span class="vt-verdict no-v">missing child</span></div>
+          <div class="vt-row no"><code>hello</code><span class="vt-verdict no-v">no arrow</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="col-divider"></div>
+
+    <section class="col-results" id="col-results">
+
+      <div class="results-placeholder" id="results-placeholder">
+        <p class="placeholder-big">—</p>
+        <p class="placeholder-hint">Results will appear here after analysis</p>
+      </div>
+
+      <div class="results-body hidden" id="results-body">
+
+        <div class="section-eyebrow">
+          <span class="eyebrow-num">§ 02</span>
+          <span class="eyebrow-label">Summary</span>
+        </div>
+
+        <div class="summary-row">
+          <div class="sum-item">
+            <span class="sum-num" id="s-trees">0</span>
+            <span class="sum-lbl">Trees</span>
+          </div>
+          <div class="sum-div"></div>
+          <div class="sum-item">
+            <span class="sum-num red" id="s-cycles">0</span>
+            <span class="sum-lbl">Cycles</span>
+          </div>
+          <div class="sum-div"></div>
+          <div class="sum-item">
+            <span class="sum-num blue" id="s-root">—</span>
+            <span class="sum-lbl">Deepest Root</span>
+          </div>
+          <div class="sum-div"></div>
+          <div class="sum-item">
+            <span class="sum-num amber" id="s-inv">0</span>
+            <span class="sum-lbl">Invalid</span>
+          </div>
+          <div class="sum-div"></div>
+          <div class="sum-item">
+            <span class="sum-num" id="s-dup">0</span>
+            <span class="sum-lbl">Dupes</span>
+          </div>
+        </div>
+
+        <div class="rule-thin mt16"></div>
+
+        <div class="section-eyebrow mt16">
+          <span class="eyebrow-num">§ 03</span>
+          <span class="eyebrow-label">Edge Classification</span>
+        </div>
+
+        <div class="edge-class-grid">
+          <div class="ec-block">
+            <p class="ec-label"><span class="ec-dot red-dot"></span>Invalid Entries <span class="ec-count" id="ec-inv-count">0</span></p>
+            <div class="ec-tags" id="inv-tags"></div>
+          </div>
+          <div class="ec-block">
+            <p class="ec-label"><span class="ec-dot amber-dot"></span>Duplicate Edges <span class="ec-count" id="ec-dup-count">0</span></p>
+            <div class="ec-tags" id="dup-tags"></div>
+          </div>
+        </div>
+
+        <div class="rule-thin mt16"></div>
+
+        <div class="section-eyebrow mt16">
+          <span class="eyebrow-num">§ 04</span>
+          <span class="eyebrow-label">Hierarchies <span class="hier-total" id="hier-total">0</span></span>
+        </div>
+
+        <div class="hier-list" id="hier-list"></div>
+
+        <div class="rule-thin mt16"></div>
+
+        <div class="section-eyebrow mt16">
+          <span class="eyebrow-num">§ 05</span>
+          <span class="eyebrow-label">Raw JSON
+            <button class="ctrl-link inline-copy" id="copy-btn" type="button">↳ copy</button>
+          </span>
+        </div>
+        <pre class="json-dump" id="json-dump"></pre>
+
+      </div>
+    </section>
+
+  </div>
+
+  <div class="rule-thick"></div>
+  <footer class="paper-footer">
+    <span>BFHL · SRM Full Stack Engineering Challenge · Round 1</span>
+    <span>ss8566@srmist.edu.in</span>
+  </footer>
+
+  <div class="error-strip hidden" id="error-strip">
+    <span id="error-txt"></span>
+    <button id="error-x">✕</button>
+  </div>
+
+  <div class="toast-el hidden" id="toast-el"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
