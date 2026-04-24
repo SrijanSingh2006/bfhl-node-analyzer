@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BFHL Node Hierarchy Analyzer
 
 **SRM Full Stack Engineering Challenge**
@@ -156,3 +157,6 @@ Returns `{ "operation_code": 1 }`.
 | **Tree Format** | Nested object `{ root: { child: { grandchild: {} } } }` |
 | **Depth** | Longest root-to-leaf path (count of nodes) |
 | **Summary** | `total_trees` = non-cyclic groups; `largest_tree_root` by max depth (lex tiebreak) |
+=======
+# bfhl-node-analyzer
+>>>>>>> a9bb7f5a822753a95addf69770618e0e506aaa45
