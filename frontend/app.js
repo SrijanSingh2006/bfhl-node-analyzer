@@ -1,4 +1,4 @@
-const API = 'http://localhost:3000/bfhl';
+const API = 'https://bfhl-backend-hlax.onrender.com/bfhl';
 
 const EXAMPLE = [
   'A->B', 'A->C', 'B->D', 'C->E', 'E->F',
